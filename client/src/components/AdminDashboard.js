@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CandidateList from "./CandidateList";
 import axios from "axios";
 import ResultsChart from "./ResultCharts";
-import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/outline"; // Ensure you have @heroicons/react installed
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/outline";
 
 const AdminDashboard = () => {
   const [candidatesList, setCandidatesList] = useState([]);

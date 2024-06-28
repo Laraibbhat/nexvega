@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom"; // Import for routing
+import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();

@@ -44,8 +44,6 @@ const CandidateList = ({ isAdmin = false }) => {
   };
 
   const onEdit = (candidate) => {
-    console.log(JSON.stringify(candidate));
-    // navigate("/add", candidate);
     navigate("/add", { state: candidate });
   };
 
