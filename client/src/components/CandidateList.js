@@ -24,10 +24,9 @@ const CandidateList = ({ isAdmin = false }) => {
         console.log("the candidate is ***************", candidate.skills);
         return (
           candidate.name.toLowerCase().includes(searchTextLower) ||
-          // candidate.skills.some((skill) =>
-          //   skill.toLowerCase().includes(searchTerm.toLowerCase())
-          // ) ||
-          candidate?.skills.toLowerCase().includes(searchTextLower) ||
+          candidate.skills.some((skill) =>
+            skill.toLowerCase().includes(searchTerm.toLowerCase())
+          ) ||
           candidate.location.toLowerCase().includes(searchTextLower)
         );
       });
@@ -40,7 +39,6 @@ const CandidateList = ({ isAdmin = false }) => {
   };
 
   const handleButtonClick = () => {
-    // Handle click logic for the "Add New Button"
     console.log("Add New Button clicked");
     navigate("/add");
   };
@@ -89,7 +87,7 @@ const CandidateList = ({ isAdmin = false }) => {
               className="border border-gray-300 hover:bg-gray-100"
             >
               <td className="px-4 py-2">{candidate.name}</td>
-              <td className="px-4 py-2">{candidate.skills}</td>
+              <td className="px-4 py-2">{candidate.skills.toString()}</td>
               <td className="px-4 py-2">{candidate.yearsOfExperience} years</td>
               <td className="px-4 py-2">{candidate.location}</td>
               {isAdmin && (

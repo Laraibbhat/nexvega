@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./CandidateForm.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import Select from "react-select";
 
 const CandidateForm = ({ candidate, onSave }) => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const CandidateForm = ({ candidate, onSave }) => {
   const candidateData = location.state;
   const initialFormData = candidateData || {
     name: "",
-    skills: "",
+    skills: [],
     yearsOfExperience: "",
     location: "",
     videoInterviewResults: "",
@@ -23,23 +23,29 @@ const CandidateForm = ({ candidate, onSave }) => {
   const [formTouched, setFormTouched] = useState({});
   const [submitClicked, setSubmitClicked] = useState(false);
 
-  console.log("The data is: " + JSON.stringify(formData));
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const skillsOptions = [
+    { value: "react", label: "React" },
+    { value: "javascript", label: "JavaScript" },
+    { value: "java", label: "Java" },
+    { value: "python", label: "Python" },
+  ];
+
+  const handleChange = (name, selectedOptions) => {
+    setFormData({ ...formData, [name]: selectedOptions });
     setFormTouched({ ...formTouched, [name]: true });
-    validateField(name, value, formErrors);
+    validateField(name, selectedOptions, formErrors);
   };
 
   const validateField = (name, value, formErrorList) => {
     let newErrors = { ...formErrorList };
-    if (String(value)?.trim() === "") {
+    if (name === "skills" && value.length === 0) {
+      newErrors[name] = "Please select at least one skill";
+    } else if (String(value)?.trim() === "") {
       newErrors[name] = "This field is required";
     } else {
       delete newErrors[name];
     }
     setFormErrors(newErrors);
-
     return newErrors;
   };
 
@@ -82,7 +88,7 @@ const CandidateForm = ({ candidate, onSave }) => {
         <h1 className="form-heading">Candidate Information</h1>
 
         <div className="form-group">
-          <label htmlFor="name" className="form-label">
+          <label className="form-label" htmlFor="name">
             Name
           </label>
           <input
@@ -90,7 +96,7 @@ const CandidateForm = ({ candidate, onSave }) => {
             id="name"
             name="name"
             value={formData.name}
-            onChange={handleChange}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="form-input"
           />
           {(submitClicked || formTouched.name) && formErrors.name && (
@@ -99,16 +105,25 @@ const CandidateForm = ({ candidate, onSave }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="skills" className="form-label">
+          <label className="form-select-label" htmlFor="skills">
             Skills
           </label>
-          <input
-            type="text"
+          <Select
             id="skills"
             name="skills"
-            value={formData.skills}
-            onChange={handleChange}
-            className="form-input"
+            options={skillsOptions}
+            value={formData.skills.map((skill) => ({
+              value: skill,
+              label: skill,
+            }))}
+            onChange={(selectedOptions) =>
+              handleChange(
+                "skills",
+                selectedOptions.map((option) => option.value)
+              )
+            }
+            isMulti
+            className="form-select"
           />
           {(submitClicked || formTouched.skills) && formErrors.skills && (
             <p className="errorMessage">{formErrors.skills}</p>
@@ -116,7 +131,7 @@ const CandidateForm = ({ candidate, onSave }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="yearsOfExperience" className="form-label">
+          <label className="form-label" htmlFor="yearsOfExperience">
             Years of Experience
           </label>
           <input
@@ -124,7 +139,9 @@ const CandidateForm = ({ candidate, onSave }) => {
             id="yearsOfExperience"
             name="yearsOfExperience"
             value={formData.yearsOfExperience}
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({ ...formData, yearsOfExperience: e.target.value })
+            }
             className="form-input"
           />
           {(submitClicked || formTouched.yearsOfExperience) &&
@@ -134,7 +151,7 @@ const CandidateForm = ({ candidate, onSave }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="location" className="form-label">
+          <label className="form-label" htmlFor="location">
             Location
           </label>
           <input
@@ -142,7 +159,9 @@ const CandidateForm = ({ candidate, onSave }) => {
             id="location"
             name="location"
             value={formData.location}
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({ ...formData, location: e.target.value })
+            }
             className="form-input"
           />
           {(submitClicked || formTouched.location) && formErrors.location && (
@@ -151,14 +170,16 @@ const CandidateForm = ({ candidate, onSave }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="codingResults" className="form-label">
+          <label className="form-label" htmlFor="codingResults">
             Coding Results
           </label>
           <select
             id="codingResults"
             name="codingResults"
             value={formData.codingResults}
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({ ...formData, codingResults: e.target.value })
+            }
             className="form-input"
           >
             <option value="">Select Result</option>
@@ -172,14 +193,19 @@ const CandidateForm = ({ candidate, onSave }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="videoInterviewResults" className="form-label">
+          <label className="form-label" htmlFor="videoInterviewResults">
             Video Interview Result
           </label>
           <select
             id="videoInterviewResults"
             name="videoInterviewResults"
             value={formData.videoInterviewResults}
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                videoInterviewResults: e.target.value,
+              })
+            }
             className="form-input"
           >
             <option value="">Select Result</option>

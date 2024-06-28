@@ -23,7 +23,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 // Define Schema and Model
 const candidateSchema = new mongoose.Schema({
   name: String,
-  skills: String,
+  skills: [String],
   location: String,
   videoInterviewResults: String,
   codingResults: String,
